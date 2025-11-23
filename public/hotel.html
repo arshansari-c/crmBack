@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Hotel - Professional Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .section-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], textarea, select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], select {
+            height: 40px;
+        }
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        input[type="file"] {
+            padding: 5px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+        .room-section {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .remove-room {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-room {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .add-room:hover {
+            background-color: #218838;
+        }
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Add New Hotel</h1>
+    <form id="hotelForm">
+        <!-- Basic Info Section -->
+        <div class="form-section">
+            <div class="section-header">Basic Information</div>
+            <div class="grid-2">
+                <div>
+                    <label for="name">Hotel Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div>
+                    <label for="stars">Stars (1-5) *</label>
+                    <input type="number" id="stars" min="1" max="5" required>
+                </div>
+            </div>
+            <label for="description">Description *</label>
+            <textarea id="description" required placeholder="Provide a detailed description of the hotel..."></textarea>
+            <div class="grid-2">
+                <div>
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Section -->
+        <div class="form-section">
+            <div class="section-header">Address *</div>
+            <div class="grid-3">
+                <div>
+                    <label for="street">Street</label>
+                    <input type="text" id="street">
+                </div>
+                <div>
+                    <label for="city">City *</label>
+                    <input type="text" id="city" required>
+                </div>
+                <div>
+                    <label for="state">State</label>
+                    <input type="text" id="state">
+                </div>
+            </div>
+            <div class="grid-3">
+                <div>
+                    <label for="country">Country *</label>
+                    <input type="text" id="country" required>
+                </div>
+                <div>
+                    <label for="postalCode">Postal Code</label>
+                    <input type="text" id="postalCode">
+                </div>
+                <div>
+                    <label for="longitude">Longitude</label>
+                    <input type="number" id="longitude" step="any" placeholder="e.g., -74.0060">
+                </div>
+                <div style="grid-column: span 3; margin-top: 10px;">
+                    <label for="latitude">Latitude</label>
+                    <input type="number" id="latitude" step="any" placeholder="e.g., 40.7128">
+                </div>
+            </div>
+        </div>
+
+        <!-- Amenities Section -->
+        <div class="form-section">
+            <div class="section-header">Amenities</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-wifi" value="Free WiFi">
+                    <label for="amenity-wifi">Free WiFi</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-pool" value="Swimming Pool">
+                    <label for="amenity-pool">Swimming Pool</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-gym" value="Gym">
+                    <label for="amenity-gym">Gym</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-restaurant" value="Restaurant">
+                    <label for="amenity-restaurant">Restaurant</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-parking" value="Parking">
+                    <label for="amenity-parking">Parking</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-spa" value="Spa">
+                    <label for="amenity-spa">Spa</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-shuttle" value="Airport Shuttle">
+                    <label for="amenity-shuttle">Airport Shuttle</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-pets" value="Pet Friendly">
+                    <label for="amenity-pets">Pet Friendly</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-service" value="Room Service">
+                    <label for="amenity-service">Room Service</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="amenity-conference" value="Conference Room">
+                    <label for="amenity-conference">Conference Room</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Policies Section -->
+        <div class="form-section">
+            <div class="section-header">Policies</div>
+            <div class="grid-2">
+                <div>
+                    <label for="checkIn">Check-in Time</label>
+                    <input type="text" id="checkIn" placeholder="e.g., 2:00 PM">
+                </div>
+                <div>
+                    <label for="checkOut">Check-out Time</label>
+                    <input type="text" id="checkOut" placeholder="e.g., 11:00 AM">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="cancellation">Cancellation Policy</label>
+                    <textarea id="cancellation" placeholder="Describe cancellation policy..."></textarea>
+                </div>
+                <div>
+                    <label>Smoking Allowed</label>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="smokingAllowed">
+                        <label for="smokingAllowed" style="font-weight: normal;">Yes</label>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <label>Pets Allowed</label>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="petsAllowed">
+                    <label for="petsAllowed" style="font-weight: normal;">Yes</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rooms Section -->
+        <div class="form-section">
+            <div class="section-header">Rooms * (Add at least one)</div>
+            <div id="roomsContainer"></div>
+            <button type="button" class="add-room" onclick="addRoom()">+ Add Room</button>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="form-section">
+            <div class="section-header">Contact Information</div>
+            <div class="grid-2">
+                <div>
+                    <label for="phone">Phone</label>
+                    <input type="text" id="phone" placeholder="+1-123-456-7890">
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" id="email">
+                </div>
+            </div>
+            <label for="website">Website</label>
+            <input type="url" id="website" placeholder="https://www.hotel.com">
+        </div>
+
+        <!-- Images Section -->
+        <div class="form-section">
+            <div class="section-header">Hotel Images *</div>
+            <label for="hotelimages">Select multiple images (JPEG, PNG, etc.)</label>
+            <input type="file" id="hotelimages" multiple accept="image/*" required>
+        </div>
+
+        <button type="submit">Add Hotel</button>
+    </form>
+
+    <script>
+        let roomCounter = 0;
+
+        function addRoom() {
+            roomCounter++;
+            const container = document.getElementById('roomsContainer');
+            const roomDiv = document.createElement('div');
+            roomDiv.className = 'room-section';
+            roomDiv.innerHTML = `
+                <div class="room-header">
+                    <h4>Room ${roomCounter}</h4>
+                    <button type="button" class="remove-room" onclick="removeRoom(this)">Remove</button>
+                </div>
+                <div class="grid-3">
+                    <div>
+                        <label>Room Type *</label>
+                        <select name="roomType" required>
+                            <option value="">Select Type</option>
+                            <option value="Single">Single</option>
+                            <option value="Double">Double</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Deluxe">Deluxe</option>
+                            <option value="Family">Family</option>
+                            <option value="Luxury">Luxury</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Room Number *</label>
+                        <input type="text" name="roomNumber" required placeholder="e.g., 101">
+                    </div>
+                    <div>
+                        <label>Price Per Night ($) *</label>
+                        <input type="number" name="pricePerNight" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <label>Max Occupancy *</label>
+                        <input type="number" name="maxOccupancy" min="1" required>
+                    </div>
+                    <div>
+                        <label>Available</label>
+                        <input type="checkbox" name="available" checked>
+                    </div>
+                </div>
+                <label>Room Amenities (comma-separated, e.g., AC, TV, Balcony)</label>
+                <input type="text" name="roomAmenities" placeholder="Optional">
+            `;
+            container.appendChild(roomDiv);
+        }
+
+        function removeRoom(button) {
+            button.closest('.room-section').remove();
+        }
+
+        // Add one default room
+        addRoom();
+
+        const form = document.getElementById('hotelForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+
+            // Basic fields
+            formData.append('name', document.getElementById('name').value.trim());
+            formData.append('description', document.getElementById('description').value.trim());
+            formData.append('stars', document.getElementById('stars').value);
+            formData.append('status', document.getElementById('status').value);
+
+            // Address object
+            const address = {
+                street: document.getElementById('street').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                country: document.getElementById('country').value.trim(),
+                postalCode: document.getElementById('postalCode').value.trim(),
+                coordinates: document.getElementById('latitude').value && document.getElementById('longitude').value 
+                    ? { type: 'Point', coordinates: [parseFloat(document.getElementById('longitude').value), parseFloat(document.getElementById('latitude').value)] } 
+                    : undefined
+            };
+            formData.append('address', JSON.stringify(address));
+
+            // Amenities array
+            const amenities = [];
+            document.querySelectorAll('input[type="checkbox"][id^="amenity-"]:checked').forEach(cb => {
+                amenities.push(cb.value);
+            });
+            formData.append('amenities', JSON.stringify(amenities));
+
+            // Policies object
+            const policies = {
+                checkIn: document.getElementById('checkIn').value.trim(),
+                checkOut: document.getElementById('checkOut').value.trim(),
+                cancellation: document.getElementById('cancellation').value.trim(),
+                smokingAllowed: document.getElementById('smokingAllowed').checked,
+                petsAllowed: document.getElementById('petsAllowed').checked
+            };
+            formData.append('policies', JSON.stringify(policies));
+
+            // Rooms array
+            const rooms = [];
+            document.querySelectorAll('.room-section').forEach(section => {
+                const roomType = section.querySelector('select[name="roomType"]').value;
+                const roomNumber = section.querySelector('input[name="roomNumber"]').value.trim();
+                const pricePerNight = parseFloat(section.querySelector('input[name="pricePerNight"]').value);
+                const maxOccupancy = parseInt(section.querySelector('input[name="maxOccupancy"]').value);
+                const available = section.querySelector('input[name="available"]').checked;
+                const roomAmenities = section.querySelector('input[name="roomAmenities"]').value.trim()
+                    ? section.querySelector('input[name="roomAmenities"]').value.split(',').map(a => a.trim())
+                    : [];
+
+                if (roomType && roomNumber && pricePerNight && maxOccupancy) {
+                    rooms.push({ roomType, roomNumber, pricePerNight, maxOccupancy, available, amenities: roomAmenities });
+                }
+            });
+            if (rooms.length === 0) {
+                alert('At least one valid room is required.');
+                return;
+            }
+            formData.append('rooms', JSON.stringify(rooms));
+
+            // Contact object
+            const contact = {
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                website: document.getElementById('website').value.trim()
+            };
+            formData.append('contact', JSON.stringify(contact));
+
+            // Files
+            const files = document.getElementById('hotelimages').files;
+            if (files.length === 0) {
+                alert('Please select at least one image.');
+                return;
+            }
+            for (let i = 0; i < files.length; i++) {
+                formData.append('hotelimages', files[i]);
+            }
+
+            try {
+                const response = await axios.post('http://localhost:3333/client/addhotels', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                if (response.status === 201) {
+                    alert('Data submitted successfully!');
+                    form.reset();
+                    document.getElementById('status').value = 'Active';
+                    // Reset rooms
+                    document.getElementById('roomsContainer').innerHTML = '';
+                    roomCounter = 0;
+                    addRoom();
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                const message = error.response?.data?.message || 'An error occurred during submission.';
+                alert(`Error: ${message}`);
+            }
+        });
+    </script>
+</body>
+</html>

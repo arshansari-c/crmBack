@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Travel Package - Professional Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .section-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], textarea, select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="number"], select {
+            height: 40px;
+        }
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        input[type="file"] {
+            padding: 5px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+        .itinerary-section {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .itinerary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .remove-itinerary {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-itinerary {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .add-itinerary:hover {
+            background-color: #218838;
+        }
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Add New Travel Package</h1>
+    <form id="packageForm">
+        <!-- Basic Info Section -->
+        <div class="form-section">
+            <div class="section-header">Basic Information</div>
+            <div class="grid-2">
+                <div>
+                    <label for="packageName">Package Name *</label>
+                    <input type="text" id="packageName" required>
+                </div>
+                <div>
+                    <label for="destination">Destination *</label>
+                    <input type="text" id="destination" required>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="nights">Nights *</label>
+                    <input type="number" id="nights" min="0" required>
+                </div>
+                <div>
+                    <label for="days">Days *</label>
+                    <input type="number" id="days" min="0" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hotels Section (Hardcoded IDs) -->
+        <div class="form-section">
+            <div class="section-header">Hotels * (Select from available)</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hotel1" value="6914bfd17be1f4e9c34b2d5e">
+                    <label for="hotel1">Hotel 1 (ID: 6914bfd17be1f4e9c34b2d5e)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hotel2" value="6914c18f7be1f4e9c34b2d65">
+                    <label for="hotel2">Hotel 2 (ID: 6914c18f7be1f4e9c34b2d65)</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Itinerary Section -->
+        <div class="form-section">
+            <div class="section-header">Itinerary * (Add at least one day)</div>
+            <div id="itineraryContainer"></div>
+            <button type="button" class="add-itinerary" onclick="addItinerary()">+ Add Day</button>
+        </div>
+
+        <!-- Inclusions/Exclusions Section -->
+        <div class="form-section">
+            <div class="section-header">Inclusions & Exclusions</div>
+            <label for="inclusions">Inclusions (comma-separated, e.g., Breakfast, Airport Pickup, City Tour)</label>
+            <textarea id="inclusions" placeholder="Enter inclusions..."></textarea>
+            <label for="exclusions">Exclusions (comma-separated, e.g., Flight Tickets, Personal Expenses)</label>
+            <textarea id="exclusions" placeholder="Enter exclusions..."></textarea>
+        </div>
+
+        <!-- Transport & Price Section -->
+        <div class="form-section">
+            <div class="section-header">Transport & Pricing</div>
+            <div class="grid-2">
+                <div>
+                    <label for="transport">Transport *</label>
+                    <select id="transport" required>
+                        <option value="">Select Transport</option>
+                        <option value="Bus">Bus</option>
+                        <option value="Car">Car</option>
+                        <option value="Flight">Flight</option>
+                        <option value="Train">Train</option>
+                        <option value="Private SUV">Private SUV</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Draft">Draft</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="basePrice">Base Price ($) *</label>
+                    <input type="number" id="basePrice" min="0" step="0.01" required>
+                </div>
+                <div>
+                    <label for="totalPrice">Total Price ($) *</label>
+                    <input type="number" id="totalPrice" min="0" step="0.01" required>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="taxPercent">Tax Percent (%)</label>
+                    <input type="number" id="taxPercent" min="0" step="0.01">
+                </div>
+                <div>
+                    <label for="discountPercent">Discount Percent (%)</label>
+                    <input type="number" id="discountPercent" min="0" step="0.01">
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div class="form-section">
+            <div class="section-header">Additional Notes</div>
+            <label for="notes">Notes</label>
+            <textarea id="notes" placeholder="Any additional notes..."></textarea>
+        </div>
+
+        <!-- Images Section -->
+        <div class="form-section">
+            <div class="section-header">Package Images *</div>
+            <label for="Images">Select multiple images (JPEG, PNG, etc.)</label>
+            <input type="file" id="Images" multiple accept="image/*" required>
+        </div>
+
+        <button type="submit">Add Package</button>
+    </form>
+
+    <script>
+        let itineraryCounter = 0;
+
+        function addItinerary() {
+            itineraryCounter++;
+            const container = document.getElementById('itineraryContainer');
+            const itineraryDiv = document.createElement('div');
+            itineraryDiv.className = 'itinerary-section';
+            itineraryDiv.innerHTML = `
+                <div class="itinerary-header">
+                    <h4>Day ${itineraryCounter}</h4>
+                    <button type="button" class="remove-itinerary" onclick="removeItinerary(this)">Remove</button>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <label>Day Number *</label>
+                        <input type="number" name="day" min="1" required value="${itineraryCounter}">
+                    </div>
+                    <div>
+                        <label>Title *</label>
+                        <input type="text" name="title" required placeholder="e.g., Arrival in Delhi">
+                    </div>
+                </div>
+                <label>Description *</label>
+                <textarea name="description" required placeholder="Describe the day's activities..."></textarea>
+                <label>Activities (comma-separated, e.g., Sightseeing, Lunch)</label>
+                <input type="text" name="activities" placeholder="Optional activities...">
+            `;
+            container.appendChild(itineraryDiv);
+        }
+
+        function removeItinerary(button) {
+            button.closest('.itinerary-section').remove();
+            // Renumber remaining days if needed, but for simplicity, skip
+        }
+
+        // Add one default itinerary
+        addItinerary();
+
+        const form = document.getElementById('packageForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+
+            // Basic fields
+            formData.append('packageName', document.getElementById('packageName').value.trim());
+            formData.append('destination', document.getElementById('destination').value.trim());
+            formData.append('transport', document.getElementById('transport').value);
+            formData.append('status', document.getElementById('status').value);
+            formData.append('notes', document.getElementById('notes').value.trim());
+
+            // Duration object
+            const duration = {
+                nights: parseInt(document.getElementById('nights').value),
+                days: parseInt(document.getElementById('days').value)
+            };
+            formData.append('duration', JSON.stringify(duration));
+
+            // Hotels array (selected IDs)
+            const hotels = [];
+            if (document.getElementById('hotel1').checked) hotels.push('6914bfd17be1f4e9c34b2d5e');
+            if (document.getElementById('hotel2').checked) hotels.push('6914c18f7be1f4e9c34b2d65');
+            if (hotels.length === 0) {
+                alert('At least one hotel must be selected.');
+                return;
+            }
+            formData.append('hotels', JSON.stringify(hotels));
+
+            // Itinerary array
+            const itinerary = [];
+            document.querySelectorAll('.itinerary-section').forEach(section => {
+                const day = parseInt(section.querySelector('input[name="day"]').value);
+                const title = section.querySelector('input[name="title"]').value.trim();
+                const description = section.querySelector('textarea[name="description"]').value.trim();
+                const activitiesStr = section.querySelector('input[name="activities"]').value.trim();
+                const activities = activitiesStr ? activitiesStr.split(',').map(a => a.trim()) : [];
+
+                if (day && title && description) {
+                    itinerary.push({ day, title, description, activities });
+                }
+            });
+            if (itinerary.length === 0) {
+                alert('At least one valid itinerary day is required.');
+                return;
+            }
+            formData.append('itinerary', JSON.stringify(itinerary));
+
+            // Inclusions/Exclusions arrays
+            const inclusionsStr = document.getElementById('inclusions').value.trim();
+            const inclusions = inclusionsStr ? inclusionsStr.split(',').map(i => i.trim()) : [];
+            formData.append('inclusions', JSON.stringify(inclusions));
+
+            const exclusionsStr = document.getElementById('exclusions').value.trim();
+            const exclusions = exclusionsStr ? exclusionsStr.split(',').map(e => e.trim()) : [];
+            formData.append('exclusions', JSON.stringify(exclusions));
+
+            // PriceDetails object
+            const priceDetails = {
+                basePrice: parseFloat(document.getElementById('basePrice').value),
+                taxPercent: parseFloat(document.getElementById('taxPercent').value) || 0,
+                totalPrice: parseFloat(document.getElementById('totalPrice').value),
+                discountPercent: parseFloat(document.getElementById('discountPercent').value) || 0
+            };
+            formData.append('priceDetails', JSON.stringify(priceDetails));
+
+            // Files (named 'Images' as expected)
+            const files = document.getElementById('Images').files;
+            if (files.length === 0) {
+                alert('Please select at least one image.');
+                return;
+            }
+            for (let i = 0; i < files.length; i++) {
+                formData.append('Images', files[i]);
+            }
+
+            try {
+                const response = await axios.post('http://localhost:3333/client/addpackages', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                if (response.status === 201) {
+                    alert('Data submitted successfully!');
+                    form.reset();
+                    document.getElementById('status').value = 'Active';
+                    document.getElementById('transport').value = '';
+                    // Reset itinerary
+                    document.getElementById('itineraryContainer').innerHTML = '';
+                    itineraryCounter = 0;
+                    addItinerary();
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                const message = error.response?.data?.message || 'An error occurred during submission.';
+                alert(`Error: ${message}`);
+            }
+        });
+    </script>
+</body>
+</html>
