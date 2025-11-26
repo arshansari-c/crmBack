@@ -15,7 +15,10 @@ import { addLeads, fetchLeads } from '../../controllers/client/Lead.Controller.j
 import { addKnowledgeRequest, fetchKnowledgeRequest } from '../../controllers/client/KnowlageRequest.Controller.js'
 import { addHotel, fetchHotels, fetchHotelsLists } from '../../controllers/client/Hotel.Controller.js'
 import { CreditNotes } from '../../models/client/Credit_note.model.js'
-import { fetchAllItems } from '../../controllers/client/All_Items.Controller.js'
+import { fetchAllInvoice, fetchAllItems } from '../../controllers/client/All_Items.Controller.js'
+import { AddAnnouncement, FetchAnnouncements } from '../../controllers/client/Announcement.Controller.js'
+import { AddGoals, GetGoals } from '../../controllers/client/Goal.Controller.js'
+import { BackupDatabaseDownload } from '../../controllers/client/BackupDowload.Controller.js'
 
 export const ClientRouter = express.Router()
 
@@ -49,3 +52,9 @@ ClientRouter.get('/fetchtickets',verifyAdminAuth,fetchTickets)
 ClientRouter.get('/fetchleads',verifyAdminAuth,fetchLeads)
 ClientRouter.get('/fetchknowlage',verifyAdminAuth,fetchKnowledgeRequest)
 ClientRouter.get('/fetchallitems',verifyAdminAuth,fetchAllItems)
+ClientRouter.get('/fetchallinvoice',verifyAdminAuth,fetchAllInvoice)
+ClientRouter.post('/addannouncement',verifyAdminAuth,AddAnnouncement)
+ClientRouter.get('/fetchannouncement',verifyAdminAuth,FetchAnnouncements)
+ClientRouter.post('/addgoals',verifyAdminAuth,AddGoals)
+ClientRouter.get('/fetchgoals',verifyAdminAuth,GetGoals)
+ClientRouter.get('/backupdata',verifyAdminAuth,BackupDatabaseDownload)

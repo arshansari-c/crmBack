@@ -10,6 +10,7 @@ export const addClientEstimateAndSave = async (req, res) => {
     const {
       ProposalId: proposalId, // Match incoming casing
       Customer: incomingCustomerId, // Match incoming casing (but we'll override with proposal's customerId)
+      SubTotal, // Added: Use provided subtotal from frontend
       Discount,
       TAX,
       Adjustment,
@@ -24,6 +25,7 @@ export const addClientEstimateAndSave = async (req, res) => {
       adminNote,
       EstimateNumber: providedEstimateNumber, // Optional override
     } = req.body;
+console.log("📥 Incoming Estimate Request Body:", req.body);
 
     // Validate required fields
     if (!proposalId) {
@@ -51,21 +53,28 @@ export const addClientEstimateAndSave = async (req, res) => {
     }
 
     // ---------------------------
-    // 2️⃣ Calculate Subtotal
+    // 2️⃣ Use Provided or Calculate Subtotal + Total
     // ---------------------------
     const round = (num) => Math.round(num * 100) / 100;
-    const subtotal = round(
-      proposal.packages.reduce((sum, pkg) => {
-        const qty = pkg.qty || 1; // Fixed: Use pkg.qty, not pkg.id.qty
-        const rate = parseFloat(pkg.rate) || 0; // Fixed: Use pkg.rate, not pkg.id.rate
-        return sum + qty * rate;
-      }, 0)
-    );
+    let subtotal;
+    if (SubTotal !== undefined) {
+      // Use provided subtotal from frontend (already calculated)
+      subtotal = round(parseFloat(SubTotal) || 0);
+    } else {
+      // Fallback: Calculate from proposal packages if not provided
+      subtotal = round(
+        proposal.packages.reduce((sum, pkg) => {
+          const qty = pkg.qty || 1;
+          const rate = parseFloat(pkg.rate) || 0;
+          return sum + qty * rate;
+        }, 0)
+      );
+    }
 
     // Use absolute values from request body (defaults to 0 if not provided)
-    const discount = Discount || 0;
-    const tax = TAX || 0;
-    const adjustment = Adjustment || 0;
+    const discount = parseFloat(Discount) || 0;
+    const tax = parseFloat(TAX) || 0;
+    const adjustment = parseFloat(Adjustment) || 0;
     const total = round(subtotal - discount + tax + adjustment);
 
     // ---------------------------
