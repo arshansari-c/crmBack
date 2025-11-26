@@ -20,7 +20,7 @@ if (!fs.existsSync(tempDir)) {
 }
 app.use(cors({
   origin : "https://crmfrontend2.onrender.com",
-  credentials : true
+  credentials : true,
 }))
 app.use(cookieParser());
 app.use(express.json());
