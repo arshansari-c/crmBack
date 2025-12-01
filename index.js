@@ -19,7 +19,7 @@ if (!fs.existsSync(tempDir)) {
   console.log("✅ Temp folder created at:", tempDir);
 }
 app.use(cors({
-  origin : "https://crmfrontend2.onrender.com",
+  origin : "http://localhost:5173",
   credentials : true,
 }))
 app.use(cookieParser());

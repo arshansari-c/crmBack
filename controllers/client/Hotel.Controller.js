@@ -5,10 +5,11 @@ import { CLIENT_RENEG_LIMIT } from "tls";
 
 // ✅ Cloudinary Config (better: move to a separate config file)
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_KEY,
-  api_secret: process.env.CLOUD_SECRET,
+  cloud_name: "dfzwhnmkf",
+  api_key: "914852376311246",
+  api_secret: "TK-APF-cbbc7pXPupHJc2fwxnWs",
 });
+
 
 // ✅ Add New Hotel Controller
 export const addHotel = async (req, res) => {

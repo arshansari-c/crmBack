@@ -4,10 +4,11 @@ import fs from "fs";
 
 // ✅ Cloudinary Config (same as in Hotels controller)
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_KEY,
-  api_secret: process.env.CLOUD_SECRET,
+  cloud_name: "dfzwhnmkf",
+  api_key: "914852376311246",
+  api_secret: "TK-APF-cbbc7pXPupHJc2fwxnWs",
 });
+
 
 export const addPackages = async (req, res) => {
   try {

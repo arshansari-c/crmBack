@@ -47,11 +47,12 @@ export const addClientExpense = async (req, res) => {
       }
 
       // ✅ Step 3: Configure Cloudinary
-      cloudinary.config({
-        cloud_name: process.env.CLOUD_NAME,
-        api_key: process.env.CLOUD_KEY,
-        api_secret: process.env.CLOUD_SECRET,
-      });
+cloudinary.config({
+  cloud_name: "dfzwhnmkf",
+  api_key: "914852376311246",
+  api_secret: "TK-APF-cbbc7pXPupHJc2fwxnWs",
+});
+
 
       // ✅ Step 4: Upload file to Cloudinary
       const uploadFile = await cloudinary.uploader.upload(ExpenseFile.tempFilePath, {
