@@ -19,7 +19,7 @@ if (!fs.existsSync(tempDir)) {
   console.log("✅ Temp folder created at:", tempDir);
 }
 app.use(cors({
-  origin : "http://localhost:5173",
+  origin : "https://crm-frontend2.vercel.app",
   credentials : true,
 }))
 app.use(cookieParser());
